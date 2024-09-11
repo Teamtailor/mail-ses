@@ -23,7 +23,10 @@ module Mail
       @error_handler = options.delete(:error_handler)
       raise ArgumentError.new(':error_handler must be a Proc') if @error_handler && !@error_handler.is_a?(Proc)
 
-      @settings = { return_response: options.delete(:return_response), message_id_domain: options.delete(:message_id_domain) }
+      @settings = {
+        return_response: options.delete(:return_response),
+        message_id_domain: options.delete(:message_id_domain)
+      }
 
       options[:credentials] = Aws::InstanceProfileCredentials.new if options.delete(:use_iam_profile)
       @client = Aws::SESV2::Client.new(options)
@@ -43,8 +46,7 @@ module Mail
 
       begin
         response = client.send_email(send_options)
-        message_id_domain = settings[:message_id_domain] || "email.amazonses.com"
-        message.message_id = "#{response.to_h[:message_id]}@#{message_id_domain}"
+        message.message_id = "#{response.to_h[:message_id]}@#{settings[:message_id_domain] || 'email.amazonses.com'}"
         settings[:return_response] ? response : self
       rescue StandardError => e
         handle_error(e, send_options)
