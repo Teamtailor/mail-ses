@@ -21,7 +21,7 @@ module Mail
       def validate_class
         return if @message.is_a?(Mail::Message)
 
-        raise ArgumentError.new('mail must be an instance of Mail::Message class')
+        raise ArgumentError.new("mail must be an instance of Mail::Message class")
       end
 
       def validate_delivery_params
@@ -31,7 +31,7 @@ module Mail
       def validate_attachments
         return unless @message.has_attachments? && @message.text_part.nil? && @message.html_part.nil?
 
-        raise ArgumentError.new('Attachment provided without message body')
+        raise ArgumentError.new("Attachment provided without message body")
       end
     end
   end
