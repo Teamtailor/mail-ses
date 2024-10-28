@@ -89,7 +89,7 @@ ActionMailer::Base.add_delivery_method :ses, Mail::SES,
     # ...
     error_handler: ->(error, raw_email) do
       Bugsnag.notify(error){|r| r.add_tab('email', { email: raw_email })}
-      raise error    
+      raise error
     end
 ```
 
@@ -117,10 +117,6 @@ Please also see the [AWS SDK v3 for SES](https://docs.aws.amazon.com/ses/latest/
 
 Please use the official [AWS SDK v3 for SES](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-sdk-ruby.html).
 
-## Shameless Plug
-
-Mail::SES is sponsored by [TableCheck](http://www.tablecheck.com/en/company/), Japan's leading restaurant management app. If **you** are a ninja-level Javascript/Ruby coder, designer, project manager, etc. and are eager to work in Tokyo with other ninjas, Japan in a dynamic environment, please get in touch at [careers@tablecheck.com](mailto:careers@tablecheck.com).
-
 ## Copyright
 
-Copyright (c) 2018 [TableCheck Inc.](http://www.tablecheck.com/en/company/) See LICENSE for further details.
+Copyright (c) 2024 [Teamtailor](http://www.teamtailor.com/). See LICENSE for further details.
