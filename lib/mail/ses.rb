@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'mail/ses/version'
-require 'mail/ses/message_validator'
-require 'mail/ses/options_builder'
+require "mail/ses/version"
+require "mail/ses/message_validator"
+require "mail/ses/options_builder"
 
 module Mail
   # Mail delivery method handler for AWS SES
@@ -21,7 +21,7 @@ module Mail
       @mail_options = options.delete(:mail_options) || {}
 
       @error_handler = options.delete(:error_handler)
-      raise ArgumentError.new(':error_handler must be a Proc') if @error_handler && !@error_handler.is_a?(Proc)
+      raise ArgumentError.new(":error_handler must be a Proc") if @error_handler && !@error_handler.is_a?(Proc)
 
       @settings = {
         return_response: options.delete(:return_response),
@@ -46,9 +46,9 @@ module Mail
 
       begin
         response = client.send_email(send_options)
-        message.message_id = "#{response.to_h[:message_id]}@#{settings[:message_id_domain] || 'email.amazonses.com'}"
+        message.message_id = "#{response.to_h[:message_id]}@#{settings[:message_id_domain] || "email.amazonses.com"}"
         settings[:return_response] ? response : self
-      rescue StandardError => e
+      rescue => e
         handle_error(e, send_options)
       end
     end

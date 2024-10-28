@@ -5,12 +5,12 @@ module Mail
     # Builds options for Aws::SESV2::Client#send_email
     class OptionsBuilder
       SES_FIELDS = %i[ from_email_address
-                       from_email_address_identity_arn
-                       reply_to_addresses
-                       feedback_forwarding_email_address
-                       feedback_forwarding_email_address_identity_arn
-                       email_tags
-                       configuration_set_name ].freeze
+        from_email_address_identity_arn
+        reply_to_addresses
+        feedback_forwarding_email_address
+        feedback_forwarding_email_address_identity_arn
+        email_tags
+        configuration_set_name ].freeze
 
       # message - The Mail::Message object to be sent.
       # options - The Hash options which override any defaults
@@ -41,7 +41,7 @@ module Mail
             cc_addresses: extract_value(:cc) || [],
             bcc_addresses: extract_value(:bcc) || []
           },
-          content: { raw: { data: @message.to_s } }
+          content: {raw: {data: @message.to_s}}
         }.compact
       end
 

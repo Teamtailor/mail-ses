@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require 'rubygems'
-require 'bundler/setup'
-require 'rspec'
+require "rubygems"
+require "bundler/setup"
+require "rspec"
 
 Bundler.setup
 
-require 'mail-ses'
+require "mail-ses"
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
 
-  config.default_formatter = 'doc' if config.files_to_run.one?
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   config.order = :random
 

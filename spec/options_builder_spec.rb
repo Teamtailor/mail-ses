@@ -1,37 +1,37 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Mail::SES::OptionsBuilder do
-  describe 'build' do
+  describe "build" do
     let(:mail) do
       Mail.new do
         from '"My From" <from@abc.com>'
-        reply_to ['reply-to1@def.com', '', 'My Reply-To <rt@qqq.com>']
-        to ['to1@def.com', 'My To <to2@xyz.com>', '']
-        cc ['', 'cc1@xyz.com', 'My CC <cc2@def.com>']
-        bcc ['My BCC <bcc1@abc.com>', '', 'bcc2@def.com']
-        body 'This is the body'
+        reply_to ["reply-to1@def.com", "", "My Reply-To <rt@qqq.com>"]
+        to ["to1@def.com", "My To <to2@xyz.com>", ""]
+        cc ["", "cc1@xyz.com", "My CC <cc2@def.com>"]
+        bcc ["My BCC <bcc1@abc.com>", "", "bcc2@def.com"]
+        body "This is the body"
       end
     end
     let(:options) { {} }
 
     subject { described_class.new(mail, options).build }
-    before { allow(mail).to receive(:to_s).and_return('Fixed message body') }
+    before { allow(mail).to receive(:to_s).and_return("Fixed message body") }
 
-    context 'without options' do
+    context "without options" do
       let(:exp) do
         {
-          from_email_address: 'My From <from@abc.com>',
-          reply_to_addresses: ['reply-to1@def.com', 'My Reply-To <rt@qqq.com>'],
+          from_email_address: "My From <from@abc.com>",
+          reply_to_addresses: ["reply-to1@def.com", "My Reply-To <rt@qqq.com>"],
           destination: {
-            to_addresses: ['to1@def.com', 'My To <to2@xyz.com>'],
-            cc_addresses: ['cc1@xyz.com', 'My CC <cc2@def.com>'],
-            bcc_addresses: ['My BCC <bcc1@abc.com>', 'bcc2@def.com']
+            to_addresses: ["to1@def.com", "My To <to2@xyz.com>"],
+            cc_addresses: ["cc1@xyz.com", "My CC <cc2@def.com>"],
+            bcc_addresses: ["My BCC <bcc1@abc.com>", "bcc2@def.com"]
           },
           content: {
             raw: {
-              data: 'Fixed message body'
+              data: "Fixed message body"
             }
           }
         }
@@ -39,13 +39,13 @@ RSpec.describe Mail::SES::OptionsBuilder do
 
       it { expect(subject).to eq(exp) }
 
-      context 'without mail from' do
-        before { mail.from = nil  }
+      context "without mail from" do
+        before { mail.from = nil }
 
         it { expect(subject.key?(:from_email_address)).to eq(false) }
       end
 
-      context 'without mail destination' do
+      context "without mail destination" do
         before do
           mail.to = nil
           mail.cc = nil
@@ -64,36 +64,36 @@ RSpec.describe Mail::SES::OptionsBuilder do
       end
     end
 
-    context 'with options' do
+    context "with options" do
       let(:options) do
-        { from_email_address: 'source@source.com',
-          from_email_address_identity_arn: 'from_arn',
-          feedback_forwarding_email_address: 'feedback@feedback.com',
-          feedback_forwarding_email_address_identity_arn: 'feedback_arn',
-          email_tags: [{ name: 'Name', value: 'Value' }],
-          configuration_set_name: 'configuration_set_name',
-          other: 'other' }
+        {from_email_address: "source@source.com",
+         from_email_address_identity_arn: "from_arn",
+         feedback_forwarding_email_address: "feedback@feedback.com",
+         feedback_forwarding_email_address_identity_arn: "feedback_arn",
+         email_tags: [{name: "Name", value: "Value"}],
+         configuration_set_name: "configuration_set_name",
+         other: "other"}
       end
 
       let(:exp) do
         {
-          from_email_address: 'source@source.com',
-          from_email_address_identity_arn: 'from_arn',
-          feedback_forwarding_email_address: 'feedback@feedback.com',
-          feedback_forwarding_email_address_identity_arn: 'feedback_arn',
+          from_email_address: "source@source.com",
+          from_email_address_identity_arn: "from_arn",
+          feedback_forwarding_email_address: "feedback@feedback.com",
+          feedback_forwarding_email_address_identity_arn: "feedback_arn",
           email_tags: [
-            { name: 'Name', value: 'Value' }
+            {name: "Name", value: "Value"}
           ],
-          configuration_set_name: 'configuration_set_name',
-          reply_to_addresses: ['reply-to1@def.com', 'My Reply-To <rt@qqq.com>'],
+          configuration_set_name: "configuration_set_name",
+          reply_to_addresses: ["reply-to1@def.com", "My Reply-To <rt@qqq.com>"],
           destination: {
-            to_addresses: ['to1@def.com', 'My To <to2@xyz.com>'],
-            cc_addresses: ['cc1@xyz.com', 'My CC <cc2@def.com>'],
-            bcc_addresses: ['My BCC <bcc1@abc.com>', 'bcc2@def.com']
+            to_addresses: ["to1@def.com", "My To <to2@xyz.com>"],
+            cc_addresses: ["cc1@xyz.com", "My CC <cc2@def.com>"],
+            bcc_addresses: ["My BCC <bcc1@abc.com>", "bcc2@def.com"]
           },
           content: {
             raw: {
-              data: 'Fixed message body'
+              data: "Fixed message body"
             }
           }
         }
@@ -102,55 +102,55 @@ RSpec.describe Mail::SES::OptionsBuilder do
       it { expect(subject).to eq(exp) }
     end
 
-    context 'when addresses contain non-ascii chars' do
+    context "when addresses contain non-ascii chars" do
       let(:mail) do
         Mail.new do
-          from '了承ございます <test@utf8.com>'
-          reply_to ['了承ございます. <test@utf8.com>', '', 'My Reply-To <rt@qqq.com>']
-          to ['to1@def.com', 'To テスト <to2@xyz.com>', '']
-          cc ['', 'cc1@xyz.com', 'CC テスト <cc2@def.com>']
-          bcc ['BCC テストです。 <bcc1@abc.com>', '', 'bcc2@def.com']
-          body 'This is the body'
+          from "了承ございます <test@utf8.com>"
+          reply_to ["了承ございます. <test@utf8.com>", "", "My Reply-To <rt@qqq.com>"]
+          to ["to1@def.com", "To テスト <to2@xyz.com>", ""]
+          cc ["", "cc1@xyz.com", "CC テスト <cc2@def.com>"]
+          bcc ["BCC テストです。 <bcc1@abc.com>", "", "bcc2@def.com"]
+          body "This is the body"
         end
       end
 
       let(:exp) do
         {
-          from_email_address: '=?UTF-8?B?5LqG5om/44GU44GW44GE44G+44GZ?= <test@utf8.com>',
-          reply_to_addresses: ['=?UTF-8?B?5LqG5om/44GU44GW44GE44G+44GZLg==?= <test@utf8.com>', 'My Reply-To <rt@qqq.com>'],
+          from_email_address: "=?UTF-8?B?5LqG5om/44GU44GW44GE44G+44GZ?= <test@utf8.com>",
+          reply_to_addresses: ["=?UTF-8?B?5LqG5om/44GU44GW44GE44G+44GZLg==?= <test@utf8.com>", "My Reply-To <rt@qqq.com>"],
           destination: {
-            to_addresses: ['to1@def.com', '=?UTF-8?B?VG8g44OG44K544OI?= <to2@xyz.com>'],
-            cc_addresses: ['cc1@xyz.com', '=?UTF-8?B?Q0Mg44OG44K544OI?= <cc2@def.com>'],
-            bcc_addresses: ['=?UTF-8?B?QkNDIOODhuOCueODiOOBp+OBmeOAgg==?= <bcc1@abc.com>', 'bcc2@def.com']
+            to_addresses: ["to1@def.com", "=?UTF-8?B?VG8g44OG44K544OI?= <to2@xyz.com>"],
+            cc_addresses: ["cc1@xyz.com", "=?UTF-8?B?Q0Mg44OG44K544OI?= <cc2@def.com>"],
+            bcc_addresses: ["=?UTF-8?B?QkNDIOODhuOCueODiOOBp+OBmeOAgg==?= <bcc1@abc.com>", "bcc2@def.com"]
           },
-          content: { raw: { data: 'Fixed message body' } }
+          content: {raw: {data: "Fixed message body"}}
         }
       end
 
       it { expect(subject).to eq(exp) }
     end
 
-    context 'when addresses are invalid' do
+    context "when addresses are invalid" do
       let(:mail) do
         Mail.new do
-          from '了承ございます <test@utf8.com'
-          reply_to ['テスト@test.com', 'A@b@c@example.com', 'valid@valid.com', 'john.doe@example..com']
-          to ['mailto:bad@address.com', '']
-          cc ['<bademail@gmail.com']
-          body 'This is the body'
+          from "了承ございます <test@utf8.com"
+          reply_to ["テスト@test.com", "A@b@c@example.com", "valid@valid.com", "john.doe@example..com"]
+          to ["mailto:bad@address.com", ""]
+          cc ["<bademail@gmail.com"]
+          body "This is the body"
         end
       end
 
       let(:exp) do
         {
-          from_email_address: '=?UTF-8?B?5LqG5om/44GU44GW44GE44G+44GZ?= <test@utf8.com',
+          from_email_address: "=?UTF-8?B?5LqG5om/44GU44GW44GE44G+44GZ?= <test@utf8.com",
           reply_to_addresses: ["=?UTF-8?B?44OG44K544OIQHRlc3QuY29t?=", "A@b@c@example.com", "valid@valid.com", "john.doe@example..com"],
           destination: {
-            to_addresses: ['mailto:bad@address.com', ''],
-            cc_addresses: ['<bademail@gmail.com'],
+            to_addresses: ["mailto:bad@address.com", ""],
+            cc_addresses: ["<bademail@gmail.com"],
             bcc_addresses: []
           },
-          content: { raw: { data: 'Fixed message body' } }
+          content: {raw: {data: "Fixed message body"}}
         }
       end
 
