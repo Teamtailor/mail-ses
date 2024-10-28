@@ -26,7 +26,7 @@ RSpec.describe Mail::SES do
   describe '#settings' do
     it do
       expect(ses).to respond_to(:settings, :settings=)
-      expect(ses.settings).to eq(return_response: nil)
+      expect(ses.settings).to eq(return_response: nil, message_id_domain: nil)
     end
   end
 
@@ -99,9 +99,19 @@ RSpec.describe Mail::SES do
       end
     end
 
-    it 'sets mail.message_id' do
-      ses.deliver!(mail)
-      expect(mail.message_id).to eq('OutboundMessageId@email.amazonses.com')
+    context "without message_id_domain config" do
+      it 'sets the default domain as mail.message_id' do
+        ses.deliver!(mail)
+        expect(mail.message_id).to eq('OutboundMessageId@email.amazonses.com')
+      end
+    end
+
+    context "with message_id_domain config" do
+      let(:ses_options) { { stub_responses: true, message_id_domain: 'eu-west-1.amazonses.com' } }
+      it 'sets as mail.message_id with the configured domain' do
+        ses.deliver!(mail)
+        expect(mail.message_id).to eq('OutboundMessageId@eu-west-1.amazonses.com')
+      end
     end
 
     it 'returns the AWS response' do
