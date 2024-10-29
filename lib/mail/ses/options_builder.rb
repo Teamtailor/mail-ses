@@ -22,7 +22,7 @@ module Mail
 
       # Returns the options for Aws::SESV2::Client#send_email.
       def build
-        message_options.merge(ses_options)
+        message_options.merge(ses_options, ses_options_from_message)
       end
 
       private
@@ -30,6 +30,17 @@ module Mail
       def ses_options
         # TODO: address fields should be encoded to UTF-8
         slice_hash(@options, *SES_FIELDS)
+      end
+
+      def ses_options_from_message
+        mail_options = @message[:mail_options]&.unparsed_value
+
+        if mail_options
+          @message[:mail_options] = nil
+          slice_hash(mail_options, *SES_FIELDS)
+        else
+          {}
+        end
       end
 
       def message_options
