@@ -1,7 +1,10 @@
 [![Gem Version](https://badge.fury.io/rb/mail-ses.svg)](http://badge.fury.io/rb/mail-ses)
-[![Github Actions](https://github.com/tablecheck/mail-ses/actions/workflows/test.yml/badge.svg)](https://github.com/tablecheck/mail-ses/actions/workflows/test.yml)
+[![Github Actions](https://github.com/teamtailor/mail-ses/actions/workflows/test.yml/badge.svg)](https://github.com/teamtailor/mail-ses/actions/workflows/test.yml)
 
 # Mail::SES
+
+## Fork from [tablecheck/mail-ses](https://github.com/tablecheck/mail-ses)
+This gem was forked to add support for different message_id domains for different AWS SES regions and support options via message headers.
 
 Mail::SES is a mail delivery method handler for Amazon SES (Simple Email Service) which can be used with Rails' [Action Mailer](https://guides.rubyonrails.org/action_mailer_basics.html).
 
@@ -23,7 +26,7 @@ Please use version 0.1.x of this gem for legacy Ruby and AWS SDK support.
 In your `Gemfile`:
 
 ```ruby
-gem 'mail-ses'
+gem "tt-mail-ses", require: "mail-ses"
 ```
 
 Next, make a new initializer at `config/initializers/mail_ses.rb`:
@@ -52,7 +55,8 @@ ActionMailer::Base.add_delivery_method :ses, Mail::SES,
     region: 'us-east-1',
     session_token: 'foobar',
     retry_limit: 5,
-    retry_max_delay: 10
+    retry_max_delay: 10,
+    message_id_domain: "eu-west-1.amazonses.com"
 ```
 
 In addition, the shortcut option `:use_iam_profile (Boolean)` which activates the IAM instance profile.
@@ -81,7 +85,6 @@ ActionMailer::Base.add_delivery_method :ses, Mail::SES,
 ### Override Mail Options
 
 You can override the default mail options on a per-mail basis by passing them in the `mail` method:
-
 
 ```ruby
 class ApplicationMailer < ActionMailer::Base

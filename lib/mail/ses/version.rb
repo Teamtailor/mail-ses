@@ -2,6 +2,6 @@
 
 module Mail
   class SES
-    VERSION = "1.1.0.pre2"
+    VERSION = "1.2.0"
   end
 end
