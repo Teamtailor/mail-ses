@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.2.0.pre
+- Support options via message headers [#2](https://github.com/Teamtailor/mail-ses/pull/2)
+
 ### 1.1.0
 
 - Mail Gem: Bump minimum version dependency to 2.8.1.

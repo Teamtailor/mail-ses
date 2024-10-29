@@ -78,6 +78,27 @@ ActionMailer::Base.add_delivery_method :ses, Mail::SES,
     }
 ```
 
+### Override Mail Options
+
+You can override the default mail options on a per-mail basis by passing them in the `mail` method:
+
+
+```ruby
+class ApplicationMailer < ActionMailer::Base
+  def example
+    mail(
+      to: "foo@example.com",
+      from: "bar@example.com",
+      mail_options: {
+        email_tags: [
+          { name: 'MessageTagName', value: 'MessageTagValue' },
+        ],
+      }
+    )
+  end
+end
+```
+
 ### AWS Error Handling
 
 To handle errors from AWS API, in the initializer you can set `:error_handler (Proc)` which takes two args:
