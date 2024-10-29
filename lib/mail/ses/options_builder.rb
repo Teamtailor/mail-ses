@@ -22,7 +22,8 @@ module Mail
 
       # Returns the options for Aws::SESV2::Client#send_email.
       def build
-        message_options.merge(ses_options, ses_options_from_message)
+        mail_options = ses_options_from_message
+        message_options.merge(ses_options, mail_options)
       end
 
       private

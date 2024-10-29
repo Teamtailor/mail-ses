@@ -136,6 +136,11 @@ RSpec.describe Mail::SES::OptionsBuilder do
       end
 
       it { expect(subject).to eq(exp) }
+
+      it "removes the options from the message object" do
+        allow(mail).to receive(:to_s).and_call_original
+        expect(subject.dig(:content, :raw, :data)).not_to include("mail-options")
+      end
     end
 
     context "when addresses contain non-ascii chars" do
