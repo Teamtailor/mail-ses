@@ -4,15 +4,15 @@ $LOAD_PATH.push File.expand_path("lib", __dir__)
 require "mail/ses/version"
 
 Gem::Specification.new do |s|
-  s.name = "mail-ses"
+  s.name = "tt-mail-ses"
   s.version = Mail::SES::VERSION
   s.licenses = ["MIT"]
   s.summary = "Ruby Mail delivery method handler for Amazon SES"
   s.description = "Ruby Mail delivery method handler for Amazon SES"
-  s.authors = ["Johnny Shields"]
-  s.email = "info@tablecheck.com"
+  s.authors = ["Jonas Brusman"]
+  s.email = "platform@teamtailor.com"
   s.files = Dir.glob("lib/**/*") + %w[CHANGELOG.md LICENSE README.md]
-  s.homepage = "https://github.com/tablecheck/mail-ses"
+  s.homepage = "https://github.com/teamtailor/mail-ses"
   s.required_ruby_version = ">= 3.0.0"
 
   s.add_dependency("aws-sdk-sesv2", ">= 1.27")
